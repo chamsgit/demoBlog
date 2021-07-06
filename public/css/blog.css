@@ -105,3 +105,6 @@
   .conteneur-base {
     min-width: 50vh;
   }
+  .bandeau-header {
+    background: #6995ce;
+  }
