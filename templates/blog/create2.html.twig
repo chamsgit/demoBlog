@@ -1,0 +1,42 @@
+{% extends "base.html.twig" %}
+
+{% block title %}
+     Blog | creation article
+ {% endblock  %}
+
+{% block body %}
+
+    <h1 class="text-center my-4">
+    
+        {% if editMode %}
+         modification article
+        {% else %}
+        Creation article
+         {% endif %}
+    
+     </h1>
+         {# ouverture de la balise <form> + methode  + action #}
+    {{form_start(formArticle)}}
+          {# fonction Twig pour faire appel aux differents champ du formulkaire #}
+        {{ form_row(formArticle.titre) }}
+        {{ form_row(formArticle.contenu) }}
+        {{ form_row(formArticle.image) }}
+
+        <button type="submit" class="btn btn-info ">
+        
+               {% if editMode %}
+         Enregistrer les modifications
+              {% else %}
+       Enregistrer
+              {% endif %}
+        </button>
+
+     {{form_end(formArticle)}}
+     {# fermeture de la balise <form> #}
+
+     
+
+
+
+
+{% endblock %}
