@@ -14,7 +14,7 @@
     <div class="col-md-6">
       <div class="row g-0 border rounded overflow-hidden flex-md-row mb-4 shadow-sm h-md-250 position-relative">
         <div class="col-md-10 p-4 d-flex flex-column position-static">
-          <strong class="d-inline-block mb-2 text-primary">World</strong>
+          <strong class="d-inline-block mb-2 text-primary">{{onearticle.category.titre}}</strong>
              {# on pioche dans un objet Twig avec le point '.' #}
           <h3 class="mb-0">{{onearticle.titre}}</h3>
           <div class="mb-1 text-muted">Posté le {{onearticle.date|date("d/m/Y")}} à {{onearticle.date|date("H:i:s", "Europe/Paris")}}</div>

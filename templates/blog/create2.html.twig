@@ -19,6 +19,7 @@
     {{form_start(formArticle)}}
           {# fonction Twig pour faire appel aux differents champ du formulkaire #}
         {{ form_row(formArticle.titre) }}
+        {{ form_row(formArticle.category, {'label' : "Catégorie de l'article"}) }}
         {{ form_row(formArticle.contenu) }}
         {{ form_row(formArticle.image) }}
 
