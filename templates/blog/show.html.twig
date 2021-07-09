@@ -6,20 +6,25 @@
  {% endblock title %}
 
   {% block body %}
+     {# {{ dump(articleBDD) }} #}
      {# <h1 class="display-4 fst-italic text-center my-4">Détails de l'article</h1> #}
 
-<pre>
+{# <pre>
   {{ dump(articleBDD) }}
-</pre>
+</pre> #}
  {# <div class="row mb-2"> #}
     <div class="col-md-12">
       <div class="row g-0 border rounded overflow-hidden flex-md-row mb-4 shadow-sm position-relative">
         <div class="col p-4 d-flex flex-column position-static">
-          {# <strong class="d-inline-block mb-2 text-primary">World</strong> #}
+          <strong class="d-inline-block mb-2 text-primary">{{articleBDD.category.titre}}</strong>
          
-          <h3 class="mb-0">{{articleBDD.titre}}</h3>
-          <div class="mb-1 text-muted">Posté le {{articleBDD.date|date("d/m/Y à H:i:s" )}}</div>
-          <p class="card-text ">{{articleBDD.contenu|raw}}</p>
+            <h3 class="mb-0">{{articleBDD.titre}}</h3>
+
+            <div class="mb-1 text-muted">Posté le {{articleBDD.date|date("d/m/Y à H:i:s" )}}</div>
+
+            <p class="card-text ">{{articleBDD.contenu|raw}}</p>
+            
+          {# la fonction path() attend en argument le NOM de la route définit dans le controlleur dans l'annotation @Route("", name="NOM_ROUTE") #}
            <a href="{{ path('blog')}}" class="link">Retour aux articles</a>
            <a href="{{ path('blog_edit', {'id': articleBDD.id}) }}" > modification </a>
           </div>
@@ -29,6 +34,47 @@
               <img src="{{articleBDD.image}}" alt="{{articleBDD.titre}}" class="col-md-12">
 
           </div>
+
+         
+          
+          {# AFFICHAGE DU FORMULAIRE D'AJOUT DE COMMENTAIRE #}
+              <h4 class="mt-5 mb-2"> Donner votre avis .</h4>
+
+               {{ form_start(formComment) }}
+               {{ form_row(formComment.auteur) }}
+               {{ form_row(formComment.messageCommentaire) }}
+               <button type='submit' class="btn btn-dark mt-2"> Poster </button>
+               {{ form_end(formComment) }}
+          
+    
+
+               <h4 class="mt-5 mb-2"> Vos réactions...</h4>
+
+
+               <div class='row'>
+               {%    for oneComment in articleBDD.Commentaires %}
+
+               <div class="row shadow rounded">
+                    
+                    <div class="col-m4-">
+                         <strong>{{oneComment.auteur}}</strong>
+                         <small class="fst-italic"> Posté le {{ oneComment.date|date('d/m/Y à H:i:s')}}</small>
+                    </div>
+
+                    <div class="col-md-8">
+                           {{ oneComment.messageCommentaire|raw}}
+                    </div>
+
+
+
+               </div>
+                 {# {{ dump((oneComment)) }} #}
+              
+
+               {%  endfor %}
+               
+               </div>
+
         </div>
     {# </div> #}
     {# Posté le {{onearticle.date|date("d/m/Y")}} à {{onearticle.date|date("H:i:s", "Europe/Paris")}} #}

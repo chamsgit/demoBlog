@@ -2,7 +2,11 @@
 
 namespace App\DataFixtures;
 
+use Faker\Factory;
 use App\Entity\Article;
+use App\Entity\Category;
+use App\Entity\Commentaire;
+use DateTime;
 use Doctrine\Persistence\ObjectManager;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 
@@ -10,23 +14,58 @@ class ArticleFixtures extends Fixture
 {
     public function load(ObjectManager $manager)
     {
-            //la boucle for tourne 10 fois pour créer 10 articles
-            for($i = 1; $i <=11; $i++)
-            {
-                $article = new Article;
+            $faker = \Faker\Factory::create('fr_FR');
+            //creation de 3 catégory
+     for($cat =1; $cat <=3; $cat++)
+     {
+         $category = new Category;
 
-                $article->setTitre("titre de l'article $i")
-                        ->setContenu( "<p> Lorem ipsum dolor sit amet consectetur adipisicing elit. Deserunt adipisci rem omnis repellat deleniti labore culpa excepturi rerum hic! Illum!lorem50 picsum10 Lorem ipsum dolor sit amet consectetur adipisicing elit. Dicta voluptate, consectetur ratione, suscipit facilis numquam nostrum explicabo possimus architecto labore hic, rerum aspernatur vitae quibusdam odit magni? Tempore quia earum vel, adipisci officia nulla non commodi quis assumenda perspiciatis laboriosam quas consectetur, ea labore incidunt, facilis perferendis eum iure eligendi. </p>"
-                          )
-                          ->setImage("https://picsum.photos/seed/picsum/200/300")
-                          ->setDate(new \DateTime());
+         $category->setTitre($faker->word)
 
+         ->setDescription($faker->paragraph());
 
-                $manager->persist($article);
+         $manager->persist($category);
 
-            }
-    
+         // creation de 4 à 10 articles
+         for($cat =1; $cat <=mt_rand(4,10); $cat++)
+     {
+         $contenu ='<p>' .join($faker->paragraphs(5), '</p><p>') . '</p>';
+         $article = new Article;
+         $article->setTitre($faker->sentence())
+                 ->setContenu($contenu)
+                 ->setImage($faker->ImageUrl(600,600))
+                 ->setDate($faker->dateTimeBetween('-6 months'))
+                 ->setCategory($category);
 
-        $manager->flush();
+         $manager->persist($article);
+
+         //creation 4 à 10 commentaires
+         for($cmt = 1; $cmt <= mt_rand(4,10); $cmt++)
+         {
+            
+
+             $now = new DateTime;
+             $interval = $now->diff($article->getDate());
+             $days = $interval->days;
+             $minimum ="-$days days";
+
+             $contenu ='<p>' .join($faker->paragraphs(2), '</p><p>') . '</p>';
+
+             $commentaire = new Commentaire;
+
+             $commentaire->setAuteur($faker->name)
+                          ->setMessageCommentaire($contenu)
+                          ->setDate($faker->dateTimeBetween($minimum))
+                          ->setArticle($article);
+            
+            $manager->persist($commentaire);
+         }
+         
+
+     }
+
     }
+
+    $manager->flush();
+ }
 }

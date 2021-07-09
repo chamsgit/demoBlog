@@ -3,7 +3,9 @@
 namespace App\Controller;
 
 use App\Entity\Article;
+use App\Entity\Commentaire;
 use App\Form\ArticleType;
+use App\Form\CommentType;
 use App\Repository\ArticleRepository;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\EntityManagerInterface;
@@ -27,7 +29,7 @@ class BlogController extends AbstractController
         // Cette classe contient des méthodes mis à disposition par Symfony pour formuler et executer des requetes SQL en BDD
 
         // $repoArticles= $this->getDoctrine()->getRepository(Article::class);
-        dump($repoArticles);
+        // dump($repoArticles);
 
         $articles = $repoArticles->findAll();
         dump($articles);
@@ -155,11 +157,18 @@ class BlogController extends AbstractController
         // $article = $repoArticle->find($id);
          dump($article);
 
-         return $this->render('blog/show.html.twig',['articleBDD' => $article]);
+         // Traitement commentaire article (formulaire + insertion)
+
+         $comment = new Commentaire;
+         $formComment = $this->createForm(CommentType::class, $comment);
+
+   
+         return $this->render('blog/show.html.twig',['articleBDD' => $article,
+        
+        'formComment'=> $formComment-> createView()
+    ]);
 
      }
-
-
 
      
   
