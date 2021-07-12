@@ -142,7 +142,7 @@ class BlogController extends AbstractController
     /**
      * @route("/blog/{id}", name="blog_show")
      */
-    public function show(Article $article): Response
+    public function show(Article $article, Request $request, EntityManagerInterface $manager): Response
      {
         //  dump($id);
 
@@ -161,12 +161,37 @@ class BlogController extends AbstractController
 
          $comment = new Commentaire;
          $formComment = $this->createForm(CommentType::class, $comment);
+         $formComment->handleRequest($request);
 
+           if($formComment->isSubmitted() && $formComment->isvalid())
+        {
+            $comment->setDate(new \DateTime());
+            $comment->setArticle($article);
+
+            $manager->persist($comment);
+            $manager->flush();
+             
+            // addFlash() : méthode permettant de déclarer un message de validation stocké en session
+            // arguements :
+            // 1. Identifiant du message (success)
+            // 2. Le message utilisateur
+
+            $this->addFlash('success', "Le commentaire a été posté avec succès");
+
+            dump($comment);
+
+            return $this->redirectToRoute('blog_show', [
+                'id' => $article->getId()
+            ]);
+        }
    
          return $this->render('blog/show.html.twig',['articleBDD' => $article,
         
         'formComment'=> $formComment-> createView()
-    ]);
+
+        
+      
+        ]);
 
      }
 
